@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     hostname: zookeeper
@@ -52,7 +53,7 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
-  
+
   spark-master:
     image: bitnami/spark:latest
     container_name: spark-master
@@ -72,11 +73,33 @@ services:
       - SPARK_MASTER_URL=spark://spark-master:7077
     volumes:
       - ./data:/opt/bitnami/spark/data
-      
+
   redis:
     image: redis
     container_name: redis
     ports:
-      - "6379:6379"        
+      - "6379:6379"
 
+  jobmanager:
+    image: flink:latest
+    container_name: jobmanager
+    ports:
+      - "8084:8084"
+    command: jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager        
 
+  taskmanager:
+    image: flink:latest
+    container_name: taskmanager
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    scale: 1
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 2    

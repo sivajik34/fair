@@ -100,6 +100,7 @@ def main():
 
             transaction = avro_deserializer(msg.value(), SerializationContext(msg.topic(), MessageField.VALUE))
             if transaction is not None:
+                #print("There is a new transaction")
                 # Create a DataFrame with the current transaction
                 transaction_df = pd.DataFrame({
                     'user_id': [transaction.user_id],
