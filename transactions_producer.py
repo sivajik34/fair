@@ -18,6 +18,7 @@
 
 # A simple example demonstrating use of AvroSerializer.
 import os
+import time
 from uuid import uuid4
 from faker import Faker
 import random
@@ -146,6 +147,7 @@ def main():
                              key=string_serializer(str(uuid4())),
                              value=avro_serializer(transaction, SerializationContext(topic, MessageField.VALUE)),
                              on_delivery=delivery_report)
+            time.sleep(1)
     except KeyboardInterrupt:
         pass
 

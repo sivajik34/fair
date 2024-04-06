@@ -71,6 +71,12 @@ services:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
     volumes:
-      - ./data:/opt/bitnami/spark/data    
+      - ./data:/opt/bitnami/spark/data
+      
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"        
 
 
